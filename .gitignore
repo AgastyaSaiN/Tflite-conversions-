@@ -1,0 +1,29 @@
+# Environments and offline packages (large, rebuilt or copied by hand, not for git)
+linux_offline_packages/wheelhouse/
+linux_offline_packages/*.sh
+linux_offline_packages/*.log
+.uvtmp/
+.venv*/
+venv/
+env/
+
+# Python
+__pycache__/
+*.pyc
+
+# Models and data put in by the user, and everything the tool makes
+put_pt_files_here/*
+put_test_pictures_here/*
+put_calibration_pictures_here/*
+!put_pt_files_here/README.txt
+!put_test_pictures_here/README.txt
+!put_calibration_pictures_here/README.txt
+results/
+*.pt
+*.onnx
+*.tflite
+*.npy
+
+# Temporary
+_tmp_*.py
+*.log

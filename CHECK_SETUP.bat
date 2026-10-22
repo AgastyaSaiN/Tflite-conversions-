@@ -1,6 +1,6 @@
 @echo off
 rem Checks that this computer has everything needed (Windows). Double-click this file.
 cd /d "%~dp0"
-python check_setup.py
+python run.py --check
 echo.
 pause

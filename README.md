@@ -86,9 +86,23 @@ put_pt_files_here/             input: .pt files
 put_test_pictures_here/        input: labelled test pictures (optional)
 put_calibration_pictures_here/ input: calibration pictures (optional)
 results/                       output: models, reports
-lib/                           the code of the four steps
+run.py                         the manager: finds a suitable Python, runs the steps, explains failures
+convert.py                     steps 1 and 2: .pt -> ONNX -> TFLite (FP32 baseline + 6 INT8 variants)
+benchmark.py                   steps 3 and 4: accuracy, speed, memory, report
 vendor_yolov5/                 bundled YOLOv5 code used for the export
 linux_offline_packages/        offline Python packages for Linux
 ```
 
-The four steps: 1 export the `.pt` to ONNX, 2 convert to TFLite and quantize, 3 benchmark, 4 report.
+Every block of `convert.py` and `benchmark.py` is explained in comments at the top of the file and above each function:
+read `convert.py` to see how the models are made, `benchmark.py` to see how they are measured.
+
+## If the results look wrong (for example every mAP is 0)
+
+The tool checks the usual causes and prints a WARNING (also shown at the top of `report.html`):
+
+- **"NO labelled objects"**: the test pictures have no label files, or they are not found. Labels must be in a `labels` folder next to `images`, same file name (`x.jpg` -> `x.txt`), lines like `class x_center y_center width height` (0-1).
+- **"labels use class number N, but the model has only M classes"**: the labels and the model do not agree on the classes.
+- **"The FP32 BASELINE itself scores about 0"**: the conversion is not the cause. The baseline is the unquantized model, so the test pictures, labels or the model itself are the problem.
+- **"... is not bigger than M1"**: the float layers of M2 / M3 were not kept; send `results/<model>/logs/run.log`.
+- A model trained on a few unlabelled pictures has learned nothing: training needs labels.
+- The FP32 baseline is about twice the size of the `.pt` (a YOLOv5 `.pt` stores 16-bit numbers). This is normal.

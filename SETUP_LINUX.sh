@@ -52,7 +52,7 @@ grep -v '^--' "$PKG/requirements_linux.lock.txt" > /tmp/basept_requirements.txt
 python -m pip install --no-index --find-links "$PKG/wheelhouse" -r /tmp/basept_requirements.txt || fail "Package installation failed. The messages above name the package."
 
 say "5/5 setup check"
-python check_setup.py || true
+python run.py --check || true
 echo
 echo "Setup finished. From now on:"
 echo "   1. copy the model file(s) into  put_pt_files_here/   (and pictures into put_test_pictures_here/ and put_calibration_pictures_here/)"
